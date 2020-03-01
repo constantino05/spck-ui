@@ -4929,7 +4929,7 @@ window.UI = window.ui = (function (exports, window, UIkit) {
   }
 
   function isString(obj) {
-    return Object.prototype.toString.call(obj) == '[object String]';
+    return typeof obj === 'string' || Object.prototype.toString.call(obj) == '[object String]';
   }
 
   function isObject(obj) {
@@ -4949,15 +4949,15 @@ window.UI = window.ui = (function (exports, window, UIkit) {
   }
 
   function isNumber(obj) {
-    return Object.prototype.toString.call(obj) == '[object Number]';
+    return typeof obj === 'number';
   }
 
   function isBoolean(obj) {
-    return Object.prototype.toString.call(obj) == '[object Boolean]';
+    return typeof obj === 'boolean';
   }
 
   function isFunction(obj) {
-    return Object.prototype.toString.call(obj) == '[object Function]';
+    return typeof obj === 'function';
   }
 
   function isElement(obj) {
@@ -5402,9 +5402,9 @@ window.UI = window.ui = (function (exports, window, UIkit) {
       var self = this;
       var handlers = self._listenersByEvent[type];
       if (handlers) {
-        handlers.forEach(function (cb) {
-          cb.apply(self, params);
-        });
+        return Promise.all(handlers.map(function (cb) {
+          return cb.apply(self, params);
+        }));
       }
     },
     addListener: function (type, func, id) {
